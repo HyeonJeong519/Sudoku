@@ -89,6 +89,10 @@ public class MainActivity extends AppCompatActivity {
 
         textView = new TextView(this);
         textView.setText("Input Number");
+        textView.setTextSize(30);
+        textView.setTextColor(Color.WHITE);
+        textView.setGravity(Gravity.CENTER);
+        inputTableLayout.addView(textView,inputTableLayoutParams);
 
         int number = 1;
         for (int i = 0; i < 4; i++) {
