@@ -2,21 +2,28 @@ package com.example.sudoku;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Context;
 import android.graphics.Color;
 import android.os.Bundle;
 import android.view.Gravity;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CompoundButton;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.TableLayout;
 import android.widget.TableRow;
 import android.widget.TextView;
+import android.widget.ToggleButton;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity {
+
     CustomButton[][] customButton = new CustomButton[9][9];
     int[][] sudoku = new int[9][9];
+
     TextView textView;
     FrameLayout parentFrameLayout;
     TableLayout inputTableLayout;
@@ -24,6 +31,13 @@ public class MainActivity extends AppCompatActivity {
     TableRow.LayoutParams inputTableRowLayoutParams;
     TableLayout.LayoutParams inputTableLayoutParams;
     FrameLayout.LayoutParams frameLayoutParams;
+
+    LayoutInflater memoLayoutInflater;
+    LinearLayout memoLinearLayout;
+    TableLayout memoTableLayout;
+    Button deletememo, cancelMemo, setMemo;
+    boolean[] memoBoolean = new boolean[9];
+    ToggleButton[] memoToggleButton = new ToggleButton[9];
 
     int buttonClickRow;
     int buttonClickCol;
@@ -36,24 +50,31 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        parentFrameLayout = (FrameLayout) findViewById(R.id.frameLayout);
+        TableLayout table = (TableLayout) findViewById(R.id.tablelayout);
+
+        memoLayoutInflater = (LayoutInflater) this.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+        memoLayoutInflater.inflate(R.layout.memo_input_dialog,parentFrameLayout,true);
+        memoLinearLayout = (LinearLayout) findViewById(R.id.memoDialogLinearLayout);
+        memoLinearLayout.setVisibility(View.INVISIBLE);
+
         BoardGenerator boardGenerator = new BoardGenerator();
         TableRow.LayoutParams layoutParams = new TableRow.LayoutParams(
                 TableRow.LayoutParams.WRAP_CONTENT,
                 TableRow.LayoutParams.MATCH_PARENT, 1);
 
         TableLayout.LayoutParams tableLayoutParams = new TableLayout.LayoutParams(
-                TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1);
+                TableLayout.LayoutParams.WRAP_CONTENT,
+                TableLayout.LayoutParams.WRAP_CONTENT, 1);
 
-        parentFrameLayout = (FrameLayout) findViewById(R.id.frameLayout);
-        TableLayout table = (TableLayout) findViewById(R.id.tablelayout);
         table.setPadding(7,7,7,7);
+
         for (int i = 0; i < 9; i++) {
             TableRow tableRow = new TableRow(this);
             layoutParams.setMargins(7, 7, 7, 7);
             tableRow.setLayoutParams(tableLayoutParams);
 
             for (int j = 0; j < 9; j++) {
-
                 customButton[i][j] = new CustomButton(this, i, j);
                 int number = boardGenerator.get(i, j);
                 int x = (int) Math.floor(Math.random() * 10);
@@ -74,32 +95,45 @@ public class MainActivity extends AppCompatActivity {
                         inputTableLayout.setVisibility(View.VISIBLE);
                     }
                 });
+                customButton[i][j].setOnLongClickListener(new View.OnLongClickListener() {
+                    @Override
+                    public boolean onLongClick(View view) {
+                        buttonClickRow = finalJ;
+                        buttonClickCol = finalI;
+                        memoLinearLayout.setVisibility(View.VISIBLE);
+                        inputTableLayout.setVisibility(View.INVISIBLE);
+                        return true;
+                    }
+                });
             }
             table.addView(tableRow);
         }
-
 
         inputTableRowLayoutParams = new TableRow.LayoutParams(TableRow.LayoutParams.WRAP_CONTENT, TableRow.LayoutParams.WRAP_CONTENT, 1);
         inputTableLayoutParams = new TableLayout.LayoutParams(TableLayout.LayoutParams.WRAP_CONTENT, TableLayout.LayoutParams.WRAP_CONTENT, 1);
         frameLayoutParams = new FrameLayout.LayoutParams(FrameLayout.LayoutParams.WRAP_CONTENT, FrameLayout.LayoutParams.WRAP_CONTENT);
         frameLayoutParams.gravity = Gravity.CENTER;
         inputTableLayout = new TableLayout(this);
-        inputTableLayout.setBackgroundColor(Color.DKGRAY);
+        inputTableLayout.setBackgroundColor(Color.parseColor("#59C1BD"));
         inputTableLayout.setVisibility(View.INVISIBLE);
 
         textView = new TextView(this);
         textView.setText("Input Number");
-        textView.setTextSize(30);
-        textView.setTextColor(Color.WHITE);
+        textView.setTextSize(25);
+        textView.setTextColor(Color.parseColor("#0D4C92"));
         textView.setGravity(Gravity.CENTER);
         inputTableLayout.addView(textView,inputTableLayoutParams);
 
+        inputTableLayout.setPadding(8,8,8,8);
+        inputTableRowLayoutParams.setMargins(8,8,8,8);
         int number = 1;
         for (int i = 0; i < 4; i++) {
             inputTableRow = new TableRow(this);
             for (int j = 0; j < 3; j++) {
                 Button button = new Button(this);
                 button.setTextSize(20);
+                button.setTextColor(Color.parseColor("#0D4C92"));
+                button.setBackgroundColor(Color.parseColor("#A0E4CB"));
                 button.setGravity(Gravity.CENTER);
                 switch (number) {
                     case 1:
@@ -116,11 +150,11 @@ public class MainActivity extends AppCompatActivity {
                                         customButton[i][j].setBackgroundColor(Color.WHITE);
                                 }
                                 checkRowNumber();
-                                    for (int i = 0; i < resultCol.size(); i++)
-                                        customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
+                                for (int i = 0; i < resultCol.size(); i++)
+                                    customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
-                               checkColNumber();
+                                checkColNumber();
                                 for (int i = 0; i < resultCol.size(); i++)
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
@@ -130,8 +164,8 @@ public class MainActivity extends AppCompatActivity {
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
+                                customButton[buttonClickCol][buttonClickRow].deleteMemo();
                                 inputTableLayout.setVisibility(View.INVISIBLE);
-
                             }
                         });
                         break;
@@ -163,6 +197,7 @@ public class MainActivity extends AppCompatActivity {
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
+                                customButton[buttonClickCol][buttonClickRow].deleteMemo();
                                 inputTableLayout.setVisibility(View.INVISIBLE);
                             }
                         });
@@ -195,6 +230,7 @@ public class MainActivity extends AppCompatActivity {
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
+                                customButton[buttonClickCol][buttonClickRow].deleteMemo();
                                 inputTableLayout.setVisibility(View.INVISIBLE);
                             }
                         });
@@ -227,6 +263,7 @@ public class MainActivity extends AppCompatActivity {
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
+                                customButton[buttonClickCol][buttonClickRow].deleteMemo();
                                 inputTableLayout.setVisibility(View.INVISIBLE);
                             }
                         });
@@ -259,6 +296,7 @@ public class MainActivity extends AppCompatActivity {
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
+                                customButton[buttonClickCol][buttonClickRow].deleteMemo();
                                 inputTableLayout.setVisibility(View.INVISIBLE);
                             }
                         });
@@ -291,6 +329,7 @@ public class MainActivity extends AppCompatActivity {
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
+                                customButton[buttonClickCol][buttonClickRow].deleteMemo();
                                 inputTableLayout.setVisibility(View.INVISIBLE);
                             }
                         });
@@ -323,6 +362,7 @@ public class MainActivity extends AppCompatActivity {
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
+                                customButton[buttonClickCol][buttonClickRow].deleteMemo();
                                 inputTableLayout.setVisibility(View.INVISIBLE);
                             }
                         });
@@ -355,6 +395,7 @@ public class MainActivity extends AppCompatActivity {
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
+                                customButton[buttonClickCol][buttonClickRow].deleteMemo();
                                 inputTableLayout.setVisibility(View.INVISIBLE);
                             }
                         });
@@ -387,18 +428,36 @@ public class MainActivity extends AppCompatActivity {
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
+                                customButton[buttonClickCol][buttonClickRow].deleteMemo();
                                 inputTableLayout.setVisibility(View.INVISIBLE);
                             }
                         });
                         break;
                     case 10:
                         inputTableRow.addView(button, inputTableRowLayoutParams);
-                        button.setVisibility(View.INVISIBLE);
+                        button.setText("Finish");
+                        button.setTextSize(16);
                         number++;
+                        button.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                if(checkAll()==true){
+                                    for(int i= 0;i<9;i++){
+                                        for(int j=0;j<9;j++)
+                                            customButton[i][j].setBackgroundColor(Color.YELLOW);
+                                    }
+                                    inputTableLayout.setVisibility(View.INVISIBLE);
+                                }else {
+                                    inputTableLayout.setVisibility(View.INVISIBLE);
+                                }
+                            }
+                        });
                         break;
                     case 11:
+
                         inputTableRow.addView(button, inputTableRowLayoutParams);
                         button.setText("cancel");
+                        button.setTextSize(16);
                         number++;
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
@@ -411,11 +470,11 @@ public class MainActivity extends AppCompatActivity {
                     case 12:
                         inputTableRow.addView(button, inputTableRowLayoutParams);
                         button.setText("del");
+                        button.setTextSize(16);
                         button.setOnClickListener(new View.OnClickListener() {
                             @Override
                             public void onClick(View view) {
                                 customButton[buttonClickCol][buttonClickRow].set(0);
-                                int original = sudoku[buttonClickCol][buttonClickRow];
                                 sudoku[buttonClickCol][buttonClickRow] = 0;
                                 for(int i= 0;i<9;i++){
                                     for(int j=0;j<9;j++)
@@ -436,6 +495,7 @@ public class MainActivity extends AppCompatActivity {
                                     customButton[resultCol.get(i)][resultRow.get(i)].setBackgroundColor(Color.RED);
                                 resultCol.clear();
                                 resultRow.clear();
+                                inputTableLayout.setVisibility(View.INVISIBLE);
                             }
                         });
                         break;
@@ -445,6 +505,45 @@ public class MainActivity extends AppCompatActivity {
         }
         parentFrameLayout.addView(inputTableLayout, frameLayoutParams);
 
+        cancelMemo = (Button) findViewById(R.id.memoBtnCancel);
+        cancelMemo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                memoLinearLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        deletememo = (Button) findViewById(R.id.memoBtnDelete);
+        deletememo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customButton[buttonClickCol][buttonClickRow].deleteMemo();
+                memoLinearLayout.setVisibility(View.INVISIBLE);
+            }
+        });
+        memoTableLayout = (TableLayout) findViewById(R.id.memoTableLayout);
+        int k =0;
+        for (int i =0; i<3;i++){
+            TableRow memoTableRow = (TableRow) memoTableLayout.getChildAt(i);
+            for(int j =0 ; j<3; j++){
+                final int checked = k;
+                memoToggleButton[k] = (ToggleButton) memoTableRow.getChildAt(j);
+                memoToggleButton[k].setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                        memoBoolean[checked] = b;
+                    }
+                });
+                k++;
+            }
+        }
+        setMemo = (Button) findViewById(R.id.memoBtnOk);
+        setMemo.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                customButton[buttonClickCol][buttonClickRow].getMemo(memoBoolean);
+                memoLinearLayout.setVisibility(View.INVISIBLE);
+            }
+        });
     }
 
     public void checkRowNumber() {
@@ -487,6 +586,45 @@ public class MainActivity extends AppCompatActivity {
                                 resultCol.add(y);
                                 resultRow.add(x);
                             } } } } }
+    }
+
+    public boolean checkAll(){
+        boolean x;
+        boolean y;
+        boolean z;
+        boolean h;
+        checkRowNumber();
+        if (resultCol.size()==0)
+            x = true;
+        else x = false;
+        resultCol.clear();
+        resultRow.clear();
+        checkColNumber();
+        if (resultCol.size()==0)
+            y = true;
+        else y = false;
+        resultCol.clear();
+        resultRow.clear();
+        check3by3Number();
+        if (resultCol.size()==0)
+            z = true;
+        else z = false;
+        resultCol.clear();
+        resultRow.clear();
+        for(int i=0;i<9;i++){
+            for (int j = 0; j < 9; j++) {
+                if(sudoku[i][j]==0) {
+                    resultRow.add(i);
+                    resultCol.add(j);
+                }
+            }
+        }
+        if(resultCol.size()==0)
+            h= true;
+            else h=false;
+        if(x==true && y==true && z==true && h==true)
+            return true;
+        else return false;
     }
 
 }

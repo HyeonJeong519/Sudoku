@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:layout_gravity="center"
+    android:background="#59C1BD"
+    android:layout_margin="7dp"
+    android:id="@+id/memoDialogLinearLayout">
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Memo"
+        android:textSize="25sp"
+        android:textStyle="bold"
+        android:layout_gravity="center"
+        android:textColor="@color/black"
+        android:layout_marginTop="7dp"
+        />
+    <TableLayout
+        android:id="@+id/memoTableLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="10dp">
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+            <ToggleButton
+                android:id="@+id/toggleBtn1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#A0E4CB"
+                android:textOff="1"
+                android:textOn="1" />
+            <ToggleButton
+                android:id="@+id/toggleBtn2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#A0E4CB"
+                android:textOff="2"
+                android:textOn="2" />
+            <ToggleButton
+                android:id="@+id/toggleBtn3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#A0E4CB"
+                android:textOff="3"
+                android:textOn="3" />
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+            <ToggleButton
+                android:id="@+id/toggleBtn4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#A0E4CB"
+                android:textOff="4"
+                android:textOn="4" />
+            <ToggleButton
+                android:id="@+id/toggleBtn5"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#A0E4CB"
+                android:textOff="5"
+                android:textOn="5" />
+            <ToggleButton
+                android:id="@+id/toggleBtn6"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#A0E4CB"
+                android:textOff="6"
+                android:textOn="6" />
+        </TableRow>
+        <TableRow
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1" >
+            <ToggleButton
+                android:id="@+id/toggleBtn7"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#A0E4CB"
+                android:textOff="7"
+                android:textOn="7" />
+            <ToggleButton
+                android:id="@+id/toggleBtn8"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#A0E4CB"
+                android:textOff="8"
+                android:textOn="8" />
+            <ToggleButton
+                android:id="@+id/toggleBtn9"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:background="#A0E4CB"
+                android:textOff="9"
+                android:textOn="9" />
+        </TableRow>
+    </TableLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
+        android:layout_marginEnd="10dp"
+        android:layout_marginBottom="10dp"
+        android:background="#A0E4CB"
+        >
+        <Button
+            android:id="@+id/memoBtnDelete"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#A0E4CB"
+            android:textSize="13sp"
+            android:text="delete" />
+        <Button
+            android:id="@+id/memoBtnCancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:background="#A0E4CB"
+            android:textSize="13sp"
+            android:text="cancel" />
+        <Button
+            android:layout_gravity="end"
+            android:id="@+id/memoBtnOk"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="#A0E4CB"
+            android:layout_weight="1"
+            android:text="ok" />
+    </LinearLayout>
+</LinearLayout>

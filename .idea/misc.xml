@@ -5,6 +5,9 @@
       <map>
         <entry key="app/src/main/res/drawable/button_selector.xml" value="0.2505" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.22309875488281256" />
+        <entry key="app/src/main/res/layout/dialog_memo.xml" value="0.2729798089890253" />
+        <entry key="app/src/main/res/layout/layout_memo.xml" value="0.10577094668433784" />
+        <entry key="app/src/main/res/layout/memo_input_dialog.xml" value="0.14285714285714285" />
       </map>
     </option>
   </component>
